@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解模式 -->
+    <!-- 简化配置：
+        (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
+        (2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
+    -->
+    <mvc:annotation-driven />
+
+    <!-- 2.静态资源默认servlet配置
+        (1)加入对静态资源的处理：js,gif,png
+        (2)允许使用"/"做整体映射
+     -->
+    <mvc:default-servlet-handler/>
+    <!--方式二-->
+    <!--<mvc:resources mapping="/static/css/**" location="/static/css/"/>
+    <mvc:resources mapping="/static/js/**" location="/static/js/"/>
+    <mvc:resources mapping="/static/images/**" location="/static/images/"/-->
+
+    <!-- 3.配置jsp 显示ViewResolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="atlan.ceer" />
+
+    <!--配置文件解析器对象id必须为multipartResolver-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置默认编码-->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--设定文件上传最大值 5M=5242880 10M=10485760-->
+        <property name="maxUploadSize" value="10485760"/><!--十兆10*1024*1024-->
+    </bean>
+
+    <!--配置异常处理器-->
+    <bean id="myExceptionResolver" class="atlan.ceer.exception.MyExceptionResolver"/>
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--要拦截的具体方法-->
+            <mvc:mapping path="/test/*"/>
+            <!--不拦截的方法-->
+            <!--<mvc:exclud-mapping path=""/>-->
+            <bean class="atlan.ceer.interceptor.MyInterceptor"/>
+        </mvc:interceptor>
+        <!--配置第二个-->
+        <!--<mvc:interceptor>
+            &lt;!&ndash;要拦截的具体方法&ndash;&gt;
+            <mvc:mapping path="/test/*"/>
+            &lt;!&ndash;不拦截的方法&ndash;&gt;
+            &lt;!&ndash;<mvc:exclud-mapping path=""/>&ndash;&gt;
+            <bean class="atlan.ceer.interceptor.MyInterceptor"/>
+        </mvc:interceptor>-->
+    </mvc:interceptors>
+
+    <context:property-placeholder location="classpath:my.properties" ignore-unresolvable="true" />
+</beans>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>测试</title>
+    <script src="static/js/jquery-3.1.1.min.js"></script>
+    <script src="static/js/test.js"></script>
+</head>
+
+<body>
+    <button id="send">测试按钮</button>
+    <form action="./test/uploadMVC" method="post" enctype="multipart/form-data">
+        选择文件:<input type="file" name="upload">
+        <input type="submit" value="上传">
+    </form>
+    <button id="error">异常处理</button>
+</body>
+<a href="./test/exception">异常处理</a>
+<a href="./test/interceptor">拦截器</a>
+<!--<img src="/image/1.jpg">-->
+</html>
